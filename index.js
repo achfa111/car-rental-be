@@ -5,10 +5,23 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require('cors');
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./openapi.json");
+
 const routes = require('./src/routes')
 const errorHandler = require("./src/middlewares/errorHandler");
 
 const { PORT = 3000 } = process.env;
+
+const swaggerSetup = [
+  swaggerDocument,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  "Car Rental API"
+];
 
 // const server = http.createServer(app);
 
@@ -19,6 +32,7 @@ app.use(cors())
 app.use(express.json());
 
 app.use("/public", express.static(path.resolve(__dirname, "public")));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(...swaggerSetup));
 
 app.get('/', async (req, res) => {
   res.status(200).send('Car Rental API')
